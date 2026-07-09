@@ -5,7 +5,7 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-  workflow_dispatch:
+  workflow_dispatch:        # Bisa dijalankan manual
 
 jobs:
   build:
@@ -50,46 +50,8 @@ jobs:
       - name: Install npm dependencies
         run: npm install
 
-      # ===== INISIALISASI PROYEK CORDOVA YANG BENAR =====
-      - name: Backup custom files
-        run: |
-          cp config.xml config.xml.bak
-          cp -r www www.bak
-
-      - name: Create Cordova project (to generate .cordova folder)
-        run: cordova create . com.esp32controllerpro.app "ESP32-C3 Pro"
-
-      - name: Restore custom files
-        run: |
-          cp config.xml.bak config.xml
-          rm -rf www
-          mv www.bak www
-          # Hapus file default yang mungkin tergenerate
-          rm -f www/index.html  # sudah diganti dengan milik kita
-
-      - name: Copy build-extras.gradle (if exists)
-        run: |
-          if [ -f build-extras.gradle ]; then
-            mkdir -p platforms/android/app
-            cp build-extras.gradle platforms/android/app/
-            echo "build-extras.gradle copied."
-          fi
-
       - name: Add Android platform
         run: cordova platform add android@12.0.1 --nofetch
-
-      # Opsional: install plugin yang belum terinstal (meski sudah di config.xml, lebih aman)
-      - name: Install plugins
-        run: |
-          cordova plugin add cordova-plugin-whitelist
-          cordova plugin add cordova-plugin-device
-          cordova plugin add cordova-plugin-vibration
-          cordova plugin add cordova-plugin-statusbar
-          cordova plugin add cordova-plugin-splashscreen
-          cordova plugin add cordova-plugin-background-mode --variable KOTLIN_VERSION=1.8.22
-          cordova plugin add cordova-plugin-local-notification@0.9.0-beta.3
-          cordova plugin add cordova-plugin-android-permissions
-        continue-on-error: true  # biarkan jika sudah ada
 
       - name: List installed plugins (debug info)
         run: cordova plugin ls
