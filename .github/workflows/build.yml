@@ -53,25 +53,17 @@ jobs:
       - name: Create placeholder icon
         run: |
           mkdir -p res/icon/android
-          # PNG 1x1 pixel valid (hex)
           printf '\x89\x50\x4E\x47\x0D\x0A\x1A\x0A\x00\x00\x00\x0D\x49\x48\x44\x52\x00\x00\x00\x01\x00\x00\x00\x01\x08\x02\x00\x00\x00\x90\x77\x53\xDE\x00\x00\x00\x0C\x49\x44\x41\x54\x08\xD7\x63\xF8\xCF\xC0\x00\x00\x00\x03\x00\x01\x4A\xC6\xD3\xE1\x00\x00\x00\x00\x49\x45\x4E\x44\xAE\x42\x60\x82' > res/icon/android/ic_launcher.png
 
       - name: Add Android platform
         run: cordova platform add android@12.0.1 --nofetch
 
-      # Buat gradle-wrapper.properties manual sebelum build
-      - name: Set Gradle version to 8.10.2
+      # 🔧 Kunci perbaikan: buat ulang Gradle Wrapper ke versi 8.10.2
+      - name: Set Gradle wrapper to 8.10.2
         run: |
-          mkdir -p platforms/android/gradle/wrapper
-          cat > platforms/android/gradle/wrapper/gradle-wrapper.properties <<'EOF'
-          distributionBase=GRADLE_USER_HOME
-          distributionPath=wrapper/dists
-          distributionUrl=https\://services.gradle.org/distributions/gradle-8.10.2-bin.zip
-          networkTimeout=10000
-          validateDistributionUrl=true
-          zipStoreBase=GRADLE_USER_HOME
-          zipStorePath=wrapper/dists
-          EOF
+          cd platforms/android
+          gradle wrapper --gradle-version 8.10.2
+          cd ../..
 
       - name: List installed plugins
         run: cordova plugin ls
