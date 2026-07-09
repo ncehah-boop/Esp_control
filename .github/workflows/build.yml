@@ -50,23 +50,30 @@ jobs:
       - name: Install npm dependencies
         run: npm install
 
-      # Buat file ikon placeholder agar tidak error
       - name: Create placeholder icon
         run: |
           mkdir -p res/icon/android
-          printf '\x89PNG...' > res/icon/android/ic_launcher.png
-        # Ganti dengan hex PNG yang valid, atau gunakan perintah di bawah:
-        # (sudah saya berikan hex PNG 1x1 pixel yang benar)
+          # PNG 1x1 pixel valid (hex)
+          printf '\x89\x50\x4E\x47\x0D\x0A\x1A\x0A\x00\x00\x00\x0D\x49\x48\x44\x52\x00\x00\x00\x01\x00\x00\x00\x01\x08\x02\x00\x00\x00\x90\x77\x53\xDE\x00\x00\x00\x0C\x49\x44\x41\x54\x08\xD7\x63\xF8\xCF\xC0\x00\x00\x00\x03\x00\x01\x4A\xC6\xD3\xE1\x00\x00\x00\x00\x49\x45\x4E\x44\xAE\x42\x60\x82' > res/icon/android/ic_launcher.png
 
       - name: Add Android platform
         run: cordova platform add android@12.0.1 --nofetch
 
-      # 🔧 TURUNKAN GRADLE KE 8.10.2 AGAR KOMPATIBEL
-      - name: Downgrade Gradle to 8.10.2
+      # Buat gradle-wrapper.properties manual sebelum build
+      - name: Set Gradle version to 8.10.2
         run: |
-          sed -i 's#distributionUrl=.*#distributionUrl=https\://services.gradle.org/distributions/gradle-8.10.2-bin.zip#' platforms/android/gradle/wrapper/gradle-wrapper.properties
+          mkdir -p platforms/android/gradle/wrapper
+          cat > platforms/android/gradle/wrapper/gradle-wrapper.properties <<'EOF'
+          distributionBase=GRADLE_USER_HOME
+          distributionPath=wrapper/dists
+          distributionUrl=https\://services.gradle.org/distributions/gradle-8.10.2-bin.zip
+          networkTimeout=10000
+          validateDistributionUrl=true
+          zipStoreBase=GRADLE_USER_HOME
+          zipStorePath=wrapper/dists
+          EOF
 
-      - name: List installed plugins (debug info)
+      - name: List installed plugins
         run: cordova plugin ls
 
       - name: Build APK debug
