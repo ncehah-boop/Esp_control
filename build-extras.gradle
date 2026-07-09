@@ -1,0 +1,16 @@
+android {
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    // Nonaktifkan Jetifier jika tidak diperlukan (AndroidX sudah aktif)
+    android.useAndroidX = true
+}
+
+// Atur versi build tools agar cocok dengan compileSdk 32
+ext {
+    compileSdkVersion = 32
+    targetSdkVersion  = 32
+    minSdkVersion     = 22
+    buildToolsVersion = "32.0.0"
+}

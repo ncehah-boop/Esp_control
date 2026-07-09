@@ -1,0 +1,31 @@
+{
+  "name": "esp32-c3-controller-pro",
+  "displayName": "ESP32-C3 Controller Pro",
+  "version": "1.0.0",
+  "description": "Dashboard kontrol ESP32-C3 dengan alarm, suara, dan sensor",
+  "main": "index.js",
+  "scripts": {
+    "build": "cordova build android",
+    "test": "echo \"No tests specified\""
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "cordova": "^13.0.0"
+  },
+  "cordova": {
+    "platforms": [
+      "android"
+    ],
+    "plugins": {
+      "cordova-plugin-background-mode": {},
+      "cordova-plugin-local-notification": {},
+      "cordova-plugin-android-permissions": {},
+      "cordova-plugin-vibration": {},
+      "cordova-plugin-device": {},
+      "cordova-plugin-whitelist": {},
+      "cordova-plugin-statusbar": {},
+      "cordova-plugin-splashscreen": {}
+    }
+  }
+}
