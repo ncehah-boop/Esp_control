@@ -2,7 +2,7 @@ name: Build Cordova Android Debug APK
 
 on:
   push:
-    branches: [ main ]
+    branches: [main, master, develop]
   workflow_dispatch:
 
 jobs:
@@ -29,7 +29,10 @@ jobs:
           node-version: '20'
 
       - name: Install Cordova CLI
-        run: npm install -g cordova
+        run: npm install -g cordova@13.0.0
+
+      - name: Install npm dependencies
+        run: npm install
 
       - name: Verify build-extras.gradle
         run: |
@@ -38,16 +41,33 @@ jobs:
             exit 1
           fi
 
-      - name: Remove old Android platform & clean caches
+      - name: Remove old Android platform and clean caches
         run: |
           cordova platform rm android || true
           rm -rf platforms/android
           rm -rf ~/.gradle/caches
           rm -rf ~/.gradle/wrapper
-          echo "Platform lama & cache Gradle dihapus."
+          echo "Platform lama dan cache Gradle dihapus."
 
       - name: Add Android platform
         run: cordova platform add android@13.0.0
+
+      - name: Install Cordova Plugins
+        run: |
+          cordova plugin add cordova-plugin-background-mode --save
+          cordova plugin add cordova-plugin-local-notification --save
+          cordova plugin add cordova-plugin-insomnia --save
+          cordova plugin add cordova-plugin-statusbar --save
+          cordova plugin add cordova-plugin-vibration --save
+          cordova plugin add cordova-plugin-network-information --save
+          cordova plugin add cordova-plugin-device --save
+          cordova plugin add cordova-plugin-android-permissions --save
+          cordova plugin add cordova-plugin-foreground-service --save
+
+      - name: Copy build-extras.gradle
+        run: |
+          mkdir -p platforms/android/app
+          cp build-extras.gradle platforms/android/app/build-extras.gradle
 
       - name: Inject Kotlin exclude rules to build.gradle
         run: |
